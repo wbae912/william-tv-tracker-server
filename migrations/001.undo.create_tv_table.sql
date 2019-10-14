@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS tv_table;
+
+DROP TYPE IF EXISTS category;
+
+DROP TYPE IF EXISTS genre_type;
+
+DROP TYPE IF EXISTS star_rating;
