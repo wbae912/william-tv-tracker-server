@@ -30,7 +30,8 @@ tvRouter
       .catch(next);
   })
   .post(jsonParser, (req,res,next) => {
-    const { tv_title, status, season_number, episode_number, rating, genre, description, review } = req.body;
+    //REMOVE user_id FROM REQ.BODY LATER...ONLY DOING THIS FOR TESTING PURPOSES SO FAR
+    const { tv_title, status, season_number, episode_number, rating, genre, description, review, user_id } = req.body;
     const ratingNum = Number(rating);
 
     if(!tv_title) {
@@ -59,7 +60,7 @@ tvRouter
     const db = req.app.get('db');
     // const user_id = req.user.id //this si obhect being pulled from User table and then we insert it as a field into the endpoint
     // NEED TO ADD user_id BELOW in newShow
-    const newShow = { tv_title, status, season_number, episode_number, rating, genre, description, review };
+    const newShow = { tv_title, status, season_number, episode_number, rating, genre, description, review, user_id };
 
     TvService.postTvShow(db,newShow)
       .then(show => {
