@@ -1,4 +1,5 @@
 CREATE TYPE star_rating as ENUM (
+  '',
   '1',
   '2',
   '3',
@@ -7,6 +8,7 @@ CREATE TYPE star_rating as ENUM (
 );
 
 CREATE TYPE genre_type as ENUM (
+  'N/A',
   'Action',
   'Animated',
   'Comedy',
@@ -15,7 +17,9 @@ CREATE TYPE genre_type as ENUM (
   'Educational',
   'Fantasy',
   'Horror',
+  'Mystery',
   'Reality',
+  'Sitcom',
   'Sci-Fi',
   'Thriller',
   'Variety'

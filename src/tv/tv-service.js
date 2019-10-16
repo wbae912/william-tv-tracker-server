@@ -13,11 +13,20 @@ const TvService = {
       .first();
   },
 
+  //THIS IS WHAT I WILL BE USING
   getTvShowsByUserId(db, user_id) {
     return db
       .select('*')
       .from('tv_table')
       .where( { user_id } );
+  },
+
+  getSpecificShowByUserId(db,id,user_id) {
+    return db
+      .select('*')
+      .from('tv_table')
+      .where( {id, user_id} )
+      .first();
   },
   
   //Getting all the SHOWS per STATUS

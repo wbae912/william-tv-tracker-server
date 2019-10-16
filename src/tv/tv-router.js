@@ -24,11 +24,9 @@ const serializeShow = show => ({
 //REQUIRE AUTH IS BREAKING EVERYTHING
 tvRouter
   .route('/all')
-  .get((req,res,next) => {
+  .get(requireAuth, (req,res,next) => {
     const db = req.app.get('db');
-    const user_id = req.app.id;
-    console.log(user_id);
-    TvService.getAllTvShows(db)
+    TvService.getTvShowsByUserId(db, req.user.id)
       .then(shows => {
         return res.status(200).json(shows.map(serializeShow));
       })
@@ -75,7 +73,10 @@ tvRouter
 
     TvService.postTvShow(db,newShow)
       .then(show => {
-        return res.status(201).json(show); // DO I NEED TO SERIALIZE SHOW AND ADD LOCATION HERE????
+        return res
+          .status(201)
+          .location(path.posix.join(req.originalUrl,`/${show.id}`))  // DO I NEED TO SERIALIZE SHOW AND ADD LOCATION HERE????
+          .json(serializeShow(show));
       })
       .catch(next);
   });
@@ -87,7 +88,7 @@ tvRouter
     const db = req.app.get('db');
     const id = req.params.id;
 
-    TvService.getTvShowById(db,id)
+    TvService.getSpecificShowByUserId(db,id,req.user.id)
       .then(show => {
         if(!show) {
           return res.status(404).send({error: 'TV show not found'});
