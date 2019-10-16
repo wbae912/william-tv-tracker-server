@@ -12,8 +12,16 @@ const TvService = {
       .where( {id} )
       .first();
   },
+
+  getTvShowsByUserId(db, user_id) {
+    return db
+      .select('*')
+      .from('tv_table')
+      .where( { user_id } );
+  },
   
   //Getting all the SHOWS per STATUS
+  //POSSIBLY DELETE ALL THIS LATER!!!!!
   getAllPlanningToWatchShows(db) {
     return db
       .select('*')
@@ -21,7 +29,7 @@ const TvService = {
       .where('status', 'Planning to Watch');
   },
 
-  getAllCurrentlyWatchingShows(db) {
+  getAllCurrentlyWatchingShows(db,user_id) {
     return db
       .select('*')
       .from('tv_table')

@@ -10,7 +10,6 @@ function requireAuth(req,res,next) {
     bearerToken = authToken.slice('bearer '.length, authToken.length);
   }
 
-  
   try {
     const payload = AuthService.verifyJwt(bearerToken);
     
@@ -32,11 +31,8 @@ function requireAuth(req,res,next) {
   } catch(error) {
     res.status(401).json( {error: 'Unauthorized request'} );
   }
-
-
-
-
-
-
-
 }
+
+module.exports = {
+  requireAuth,
+};

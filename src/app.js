@@ -20,8 +20,8 @@ app.use(cors());
 
 
 app.use('/api/shows', tvRouter);
-app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
 
 
 app.use(function errorHandler(error, req, res, next) {
