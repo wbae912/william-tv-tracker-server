@@ -14,11 +14,11 @@ const TvService = {
   },
 
   //THIS IS WHAT I WILL BE USING
-  getTvShowsByUserId(db, user_id) {
+  getTvShowsByUserId(db, userId) {
     return db
       .select('*')
       .from('tv_table')
-      .where( { user_id } );
+      .where( { user_id: userId } );
   },
 
   getSpecificShowByUserId(db,id,user_id) {
@@ -101,6 +101,15 @@ const TvService = {
       .update(newShowFields)
       .from('tv_table')
       .where( {id} );
+  },
+
+  //UPDATED FEATURES
+  filterBySearchName(db,userId,searchTerm) {
+    return db
+      .select('*')
+      .from('tv_table')
+      .where( {user_id: userId })
+      .andWhere('tv_title', 'ilike', `%${searchTerm}%`);
   }
 };
 

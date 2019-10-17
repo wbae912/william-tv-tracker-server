@@ -25,7 +25,7 @@ const serializeShow = show => ({
 tvRouter
   .route('/all')
   .get(requireAuth, (req,res,next) => {
-    const db = req.app.get('db');
+    const db = req.app.get('db');    
     TvService.getTvShowsByUserId(db, req.user.id)
       .then(shows => {
         return res.status(200).json(shows.map(serializeShow));
@@ -128,6 +128,19 @@ tvRouter
       })
       .catch(next);
   });
+
+// tvRouter
+//   .route('/search')
+//   .get(requireAuth, (req,res,next) => {
+//     const db = req.app.get('db');
+//     const { searchTerm } = req.query;
+//     const userId = req.user.id;
+//     TvService.filterBySearchName(db,userId,searchTerm)
+//       .then(shows => {
+//         return res.status(200).json(shows.map(serializeShow));
+//       })
+//       .catch(next);
+//   });
 
 //POSSIBLY DELETE ALL THIS LATER
 // tvRouter
