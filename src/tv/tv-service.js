@@ -38,7 +38,7 @@ const TvService = {
       .where('status', 'Planning to Watch');
   },
 
-  getAllCurrentlyWatchingShows(db,user_id) {
+  getAllCurrentlyWatchingShows(db) {
     return db
       .select('*')
       .from('tv_table')

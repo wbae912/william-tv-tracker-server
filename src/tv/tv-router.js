@@ -3,7 +3,6 @@ const TvService = require('./tv-service');
 const xss = require('xss');
 const path = require('path');
 const { requireAuth } = require('../middleware/jwt-auth');
-const AuthService = require('../auth/auth-service');
 
 const tvRouter = express.Router();
 const jsonParser = express.json();
@@ -21,7 +20,6 @@ const serializeShow = show => ({
   user_id: show.user_id
 });
 
-//REQUIRE AUTH IS BREAKING EVERYTHING
 tvRouter
   .route('/all')
   .get(requireAuth, (req,res,next) => {
@@ -33,28 +31,24 @@ tvRouter
       .catch(next);
   })
   .post(requireAuth, jsonParser, (req,res,next) => {
-    //REMOVE user_id FROM REQ.BODY LATER...ONLY DOING THIS FOR TESTING PURPOSES SO FAR
-    // GET TOKEN OUT OF BODY AND THEN DECRYPT IT and get the subject => payload out of the TOKEN
-    // console.log(req.body);
-    //TOOK USER_ID FOR NOW IN REQ.BODY...IF IT BREAKS EVERYTHING TRY AGAIN
     const { tv_title, status, season_number, episode_number, rating, genre, description, review } = req.body;
     const ratingNum = Number(rating);
 
     if(!tv_title) {
-      return res.status(400).json( {error: 'TV Show Title is required'} );
+      return res.status(400).json( {error: 'TV show name is required'} );
     }
     if(!status) {
       return res.status(400).json( {error: 'Status is required'} );
     }
 
     if(season_number) {
-      if(!Number.isInteger(season_number)) {
-        return res.status(400).json( {error: 'Season Number must be a whole number'});
+      if(!Number.isInteger(season_number) && Number(season_number) <= 0) {
+        return res.status(400).json( {error: 'Season Number must be a whole number greater than 0'});
       }
     }
     if(episode_number) {
-      if(!Number.isInteger(episode_number)) {
-        return res.status(400).json( {error: 'Episode Number must be a whole number'});
+      if(!Number.isInteger(episode_number) && Number(episode_number) <= 0) {
+        return res.status(400).json( {error: 'Episode Number must be a whole number greater than 0'});
       }
     }
     if(rating) {
@@ -64,9 +58,6 @@ tvRouter
     }
 
     const db = req.app.get('db');
-    // const user_id = req.user.id //this si obhect being pulled from User table and then we insert it as a field into the endpoint
-    // NEED TO ADD user_id BELOW in newShow
-    // SEND THE USER_ID DECRYPTED FROM THE JWT TOKEN AND SEND IT IN AS A NEWSHOW
     const newShow = { tv_title, status, season_number, episode_number, rating, genre, description, review };
 
     newShow.user_id = req.user.id;
@@ -75,7 +66,7 @@ tvRouter
       .then(show => {
         return res
           .status(201)
-          .location(path.posix.join(req.originalUrl,`/${show.id}`))  // DO I NEED TO SERIALIZE SHOW AND ADD LOCATION HERE????
+          .location(path.posix.join(req.originalUrl,`/${show.id}`))
           .json(serializeShow(show));
       })
       .catch(next);
@@ -128,52 +119,5 @@ tvRouter
       })
       .catch(next);
   });
-
-// tvRouter
-//   .route('/search')
-//   .get(requireAuth, (req,res,next) => {
-//     const db = req.app.get('db');
-//     const { searchTerm } = req.query;
-//     const userId = req.user.id;
-//     TvService.filterBySearchName(db,userId,searchTerm)
-//       .then(shows => {
-//         return res.status(200).json(shows.map(serializeShow));
-//       })
-//       .catch(next);
-//   });
-
-//POSSIBLY DELETE ALL THIS LATER
-// tvRouter
-//   .route('/planning')
-//   .get((req,res,next) => {
-//     const db = req.app.get('db');
-//     TvService.getAllPlanningToWatchShows(db)
-//       .then(shows => {
-//         return res.status(200).json(shows);
-//       })
-//       .catch(next);
-//   });
-
-// tvRouter
-//   .route('/watching')
-//   .get((req,res,next) => {
-//     const db = req.app.get('db');
-//     TvService.getAllCurrentlyWatchingShows(db)
-//       .then(shows => {
-//         return res.status(200).json(shows.map(serializeShow));
-//       })
-//       .catch(next);
-//   });
-
-// tvRouter
-//   .route('/completed')
-//   .get((req,res,next) => {
-//     const db = req.app.get('db');
-//     TvService.getAllCompletedShows(db)
-//       .then(shows => {
-//         return res.status(200).json(shows.map(serializeShow));
-//       })
-//       .catch(next);
-//   });
 
 module.exports = tvRouter;
