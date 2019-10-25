@@ -1,26 +1,56 @@
-# Express Boilerplate!
+# TV Tracker API
+* Live link to API endpoints: https://whispering-brook-43228.herokuapp.com/api/shows/all
 
-This is a boilerplate project used for starting new projects!
 
-## Set up
+## Getting Started
+* Clone the repository and install dependencies using ```npm install```
+* Create local PostgreSQL databases:
+  * ```tv-tracker```
+  * ```tv-tracker-test```
+* Create a ```.env``` file and provide the local database locations
+  * Example: ```"postgresql://dunder_mifflin@localhost/tv-tracker"```
+* Update the databases using ```npm run migrate``` and ```npm run migrate:test```
+* Seed the database with dummy data using ```psql -U [username] -d tv-tracker -f ./seeds/seed.tv_table.sql```
+* Run the local server using ```npm run dev```
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+## Description
+TV Tracker API is the server responsible for handling API requests for the TV Tracker application
+* Live Link to application: https://tv-tracker-app.wbae912.now.sh/
+* Link to application repository: https://github.com/wbae912/william-tv-tracker-client
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
 
-## Scripts
+## Endpoints
+#### TV Endpoints (All endpoints are protected)
+* ```GET /api/shows/all``` : Returns an array of a specific user's TV show entries
+* ```POST /api/shows/all``` : Endpoint for user to submit their TV show entry, which is saved in the database. Returns an object with the TV show's properties. Field options include:
+  * tv_title (required): Name of TV show
+  * status (required): Status of TV show ("Planning to Watch", "Currently Watching", "Completed")
+  * season_number: Season number for a TV show
+  * episode_number: Episode number for a TV show
+  * rating: Rating of the TV show
+  * genre: Genre of the TV show
+  * description: description of the TV show
+  * review: review of the TV show
 
-Start the application `npm start`
+* ```GET /api/shows/all/:id``` : Returns an object of a single TV show entry for a specific user
+* ```DELETE /api/shows/all/:id``` : Endpoint for user to delete their TV show entry from the database
+* ```PATCH /api/shows/all/:id``` : Endpoint for user to edit their specific TV show entry 
 
-Start nodemon for the application `npm run dev`
 
-Run the tests `npm test`
+#### Users Endpoint
+* ```POST /api/users ``` : Endpoint for user to register and create their own account for the application. Credentials are stored in the users table in the database. Field options include:
+  * full_name (required): User's full name
+  * user_name (required): User's desired username
+  * password (required): User's desired password
 
-## Deploying
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+#### Authorization Endpoint
+* ```POST /api/auth/login``` : Endpoint used to validate a user's username and password. Returns a JWT token to authorize additional requests to the API upon successful login. Field options include:
+  * user_name (required): User's username
+  * password (required): User's password
+
+
+#### Technologies
+* NodeJS
+* Express
+* PostgreSQL
