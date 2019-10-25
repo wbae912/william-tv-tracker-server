@@ -120,7 +120,6 @@ function cleanTables(db) {
     `TRUNCATE
       tv_table,
       tv_users`
-    // RESTART IDENTITY CASCADE`
   );
 }
 
@@ -138,11 +137,9 @@ function seedUsers(db, users) {
 }
 
 function seedTvTable(db, users, shows) {
-  // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
     await seedUsers(trx, users);
     await trx.into('tv_table').insert(shows);
-    // update the auto sequence to match the forced id values
     await trx.raw(
       `SELECT setval('tv_table_id_seq', ?)`,
       [shows[shows.length - 1].id],

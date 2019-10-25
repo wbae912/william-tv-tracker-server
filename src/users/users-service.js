@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 const xss = require('xss');
 
-const REGEX = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/; // Lowercase, uppercase, number
+// Lowercase, uppercase, number
+const REGEX = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
 
 const UsersService = {
   hasUserWithUserName(db, user_name) {
